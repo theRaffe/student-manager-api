@@ -6,5 +6,4 @@ load_dotenv(find_dotenv())
 
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
-print("SUPABASE_URL:", url)
 supabase_client: Client = create_client(supabase_url=url, supabase_key=key)

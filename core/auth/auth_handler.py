@@ -15,11 +15,10 @@ def decodeJWT(token: str) -> dict:
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="An expception occurred at decoding JWT",
         headers={"WWW-Authenticate": "Bearer"})
-    print("===== start decodeJWT")
     try:
         decoded_token = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM], audience="authenticated")
-        print("check token exp:", decoded_token["exp"] >= time.time())
         result = decoded_token if decoded_token["exp"] >= time.time() else None
         return result
-    except JWTError:
+    except JWTError as exp:
+        print("An expception occurred at decoding JWT", exp)
         raise exception
