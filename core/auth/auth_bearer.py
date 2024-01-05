@@ -5,6 +5,7 @@ from fastapi import Request, HTTPException
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 from .auth_handler import decodeJWT
+from core.supabase.client_db import supabase_client 
 
 
 class JWTBearer(HTTPBearer):
@@ -20,6 +21,7 @@ class JWTBearer(HTTPBearer):
             decoded_token = self.decode_jwt(credentials.credentials)
             if not self.verify_jwt(decoded_token):
                 raise HTTPException(status_code=403, detail="Invalid token or expired token.")
+            supabase_client.postgrest.auth(credentials.credentials)
             return decoded_token
         else:
             raise HTTPException(status_code=403, detail="Invalid authorization code.")

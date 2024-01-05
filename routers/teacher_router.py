@@ -14,5 +14,8 @@ adapter_db = AdapterDB(supabaseClient=supabase_client)
 
 @router.get("/groups")
 async def get_groups(user:CatUser = Depends(auth_user)):
+    """
+    API to get list of student groups of authenticated user/teacher
+    """
     response = adapter_db.get_teacher_group(user.id)
     return response
