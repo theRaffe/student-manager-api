@@ -1,5 +1,7 @@
 from supabase import Client
 
+from models.teacher_group import TeacherGroup, convert_dict_group_model
+
 
 class AdapterDB:
     supabase: Client
@@ -31,5 +33,6 @@ class AdapterDB:
     def get_teacher_group(self, teacher_id: str):
         response = self.supabase.from_("RelStudentGroupTeacher").select("""groupId,Course(nameCourse),CatGroup(level,letter,start_period,end_period)
         """).eq("teacherId", teacher_id).execute()
-        print("get_teacher_group: ", response.data)
-        return response
+        group_list = response.data
+        result_group = [TeacherGroup(**convert_dict_group_model(group)) for group in group_list]
+        return result_group
