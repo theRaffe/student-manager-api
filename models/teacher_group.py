@@ -40,8 +40,8 @@ def convert_dict_group_model(group: dict):
     A model of TeacherGroup
     """
     return {
-        "group_id": group["groupId"],
-        "name_course": group["Course"]["nameCourse"],
+        "group_id": group["group_id"],
+        "name_course": group["Course"]["name_course"],
         "letter": group["CatGroup"]["letter"],
         "level": group["CatGroup"]["level"],
         "end_period": group["CatGroup"]["end_period"],

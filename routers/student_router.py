@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends
 
 from core.adapter.adapter_db import AdapterDB
+from core.auth.auth_bearer import JWTBearer
 from core.supabase.client_db import supabase_client
 from core.utils.auth_user_utils import auth_user
 from models.cat_user import CatUser
+from models.request.create_attendance_student import CreateAttendanceStudent
 
 adapter_db = AdapterDB(supabaseClient=supabase_client)
 
@@ -30,3 +32,8 @@ async def get_attendance_group(group_id: str, init_range: str, end_range: str,us
         a string of end date of range
     """
     return adapter_db.get_attendance_by_group(group_id, init_range, end_range, user.id)
+
+@router.post("/register-attendance", dependencies=[Depends(JWTBearer())])
+async def register_attendance(request: CreateAttendanceStudent):
+    response = adapter_db.register_attendance(request=request)
+    return response

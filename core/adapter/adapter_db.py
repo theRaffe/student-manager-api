@@ -1,6 +1,12 @@
+from datetime import datetime
+from fastapi import HTTPException
+
 from supabase import Client
 
+from models.request.create_attendance_student import CreateAttendanceStudent
 from models.teacher_group import TeacherGroup, convert_dict_group_model
+from postgrest.exceptions import APIError
+import logging
 
 
 class AdapterDB:
@@ -31,8 +37,18 @@ class AdapterDB:
         return None
 
     def get_teacher_group(self, teacher_id: str):
-        response = self.supabase.from_("RelStudentGroupTeacher").select("""groupId,Course(nameCourse),CatGroup(level,letter,start_period,end_period)
-        """).eq("teacherId", teacher_id).execute()
+        response = self.supabase.from_("RelStudentGroupTeacher").select("""group_id,Course(name_course),CatGroup(level,letter,start_period,end_period)
+        """).eq("teacher_id", teacher_id).execute()
         group_list = response.data
         result_group = [TeacherGroup(**convert_dict_group_model(group)) for group in group_list]
         return result_group
+    
+    def register_attendance(self, request: CreateAttendanceStudent):
+        date_attendance = request.date_attendance if request.date_attendance else datetime.today().strftime('%Y-%m-%d')
+        request_insert = { "student_group_id": request.student_group_id, "course_id": request.course_id, "date_attendance": date_attendance}
+        try:
+            response = self.supabase.table("StudentAttendance").insert(request_insert).execute()
+            return response.data
+        except APIError as exp:
+            logging.error(exp)
+            raise HTTPException(status_code=517, detail="An error occurred at DB operation")
