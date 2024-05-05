@@ -3,6 +3,7 @@ from fastapi import HTTPException
 
 from supabase import Client
 
+from core.utils.default_utils import is_valid_uuid
 from models.request.create_attendance_student import CreateAttendanceStudent
 from models.teacher_group import TeacherGroup, convert_dict_group_model
 from postgrest.exceptions import APIError
@@ -52,3 +53,15 @@ class AdapterDB:
         except APIError as exp:
             logging.error(exp)
             raise HTTPException(status_code=517, detail="An error occurred at DB operation")
+        
+    def get_group_by_school(self, school_id: str):
+        """
+        Get rows of groups that belong to school_id parameter
+        """
+
+        if is_valid_uuid(school_id):
+            response = self.supabase.table("CatGroup").select(
+                "*").eq("school_id", school_id).execute()
+            return response.data
+        
+        raise HTTPException(status_code=400, detail="Invalid UUID for school_id") 

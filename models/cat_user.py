@@ -5,4 +5,6 @@ class CatUser(BaseModel):
     email: str
     full_name: str
     role: int
+    active_school_id: str
+    
     
