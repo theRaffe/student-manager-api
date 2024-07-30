@@ -22,4 +22,4 @@ app.include_router(catalog_router.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "Hello, Student Manager"}
