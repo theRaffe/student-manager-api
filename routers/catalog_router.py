@@ -11,10 +11,10 @@ router = APIRouter(prefix="/catalog",
 
 adapter_db = AdapterDB(supabaseClient=supabase_client)
 
-@router.get("/get_group_by_school")
-async def get_group_school(school_id: str, user:CatUser = Depends(auth_user)):
+@router.get("/get_group_catalogs")
+async def get_group_catalogs(school_id: str, user:CatUser = Depends(auth_user)):
     """
-    API to get list of student groups of authenticated user/teacher
+    API to get catalogs of group and course
     """
-    response = adapter_db.get_group_by_school(school_id)
+    response = adapter_db.get_basic_catalog(school_id)
     return response
