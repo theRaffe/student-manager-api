@@ -20,6 +20,7 @@ class TeacherGroup(BaseModel):
     """
 
     group_id: str
+    course_id: str
     name_course: str
     level: int
     letter: str
@@ -41,6 +42,7 @@ def convert_dict_group_model(group: dict):
     """
     return {
         "group_id": group["group_id"],
+        "course_id": group["course_id"],
         "name_course": group["Course"]["name_course"],
         "letter": group["CatGroup"]["letter"],
         "level": group["CatGroup"]["level"],
